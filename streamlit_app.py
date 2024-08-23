@@ -10,7 +10,7 @@ start = time.time()
 
 @st.cache_resource
 def load_skill_extractor():
-    nlp = spacy.load("en_core_web_md")
+    nlp = spacy.load("en_core_web_lg")
     return SkillExtractor(nlp, SKILL_DB, PhraseMatcher)
 
 skill_extractor = load_skill_extractor()
