@@ -5,6 +5,8 @@ from skillNer.general_params import SKILL_DB
 from skillNer.skill_extractor_class import SkillExtractor
 import time
 import streamlit as st
+from docx import Document
+
 
 start = time.time()
 
@@ -24,6 +26,14 @@ def extract_pdf_data(file_path):
             if text:
                 data += text
     return data
+
+def docx_to_text(file_path):
+    doc = Document(file_path)
+    print('from doc2docx import convert', doc)
+    text = []
+    for paragraph in doc.paragraphs:
+        text.append(paragraph.text)
+    return '\n'.join(text)
 
 def get_tokens(text):
     cleaned_text = (
@@ -85,21 +95,21 @@ tab1, tab2 = st.tabs(["**Home**", "**Results**"])
 with tab1:
     st.title("Resume Scoring System")
     uploaded_files = st.file_uploader(
-        '**Choose your resume.pdf file:** ', type="pdf", accept_multiple_files=True)
+        '**Choose your resume.pdf file:** ', type=["pdf", "doc", "docx"], accept_multiple_files=True)
     JD_file = st.file_uploader(
         '**Choose your Job Description.pdf file:** ', type="pdf")
     comp_pressed = st.button("Compare", disabled=uploaded_files is None or JD_file is None)
 
     if comp_pressed and uploaded_files and JD_file:
         with st.spinner('Comparing resumes with job description...'):
+            uploaded_file_paths = []
             JD = extract_pdf_data(JD_file)
-            uploaded_file_paths = [extract_pdf_data(file) for file in uploaded_files]
+            for file in uploaded_files:
+                if file.name.endswith(".pdf") or file.name.endswith(".PDF"):
+                    uploaded_file_paths.append(extract_pdf_data(file))
+                elif file.name.endswith(".docx") or file.name.endswith(".DOCX"):
+                    uploaded_file_paths.append(docx_to_text(file))
             score_list = [compare(resume, JD) for resume in uploaded_file_paths]
-        
-        # if len(uploaded_files) == 0:
-        #     st.warning("Please upload at least one resume file.")
-
-
 
 with tab2:
     st.header("Results")
