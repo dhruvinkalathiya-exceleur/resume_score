@@ -5,3 +5,4 @@ skillNer==1.0.3
 streamlit==1.37.1
 ipython==8.26.0
 PyDocX
+docx
