@@ -95,7 +95,7 @@ tab1, tab2 = st.tabs(["**Home**", "**Results**"])
 with tab1:
     st.title("Resume Scoring System")
     uploaded_files = st.file_uploader(
-        '**Choose your resume.pdf file:** ', type=["pdf", "doc", "docx"], accept_multiple_files=True)
+        '**Choose your resume.pdf file:** ', type=["pdf", "docx"], accept_multiple_files=True)
     JD_file = st.file_uploader(
         '**Choose your Job Description.pdf file:** ', type="pdf")
     comp_pressed = st.button("Compare", disabled=uploaded_files is None or JD_file is None)
